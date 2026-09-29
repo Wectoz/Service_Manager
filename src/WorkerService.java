@@ -18,5 +18,15 @@ public class WorkerService extends Service implements Deployable {
     public void deploy(String newVersion) {
         setVersion(newVersion);
     }
+    
+    public static WorkerService[] getPredefinedServices() {
+        return new WorkerService[] {
+            new WorkerService("Email Worker", "1.5.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "EmailJob"),
+            new WorkerService("Report Generator", "2.0.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "ReportJob"),
+            new WorkerService("Data Cleanup", "1.0.0", Environment.STAGING, ServiceStatus.STOPPED, "CleanupJob"),
+            new WorkerService("Backup Worker", "1.3.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "BackupJob"),
+            new WorkerService("Notification Worker", "1.1.0", Environment.DEVELOPMENT, ServiceStatus.STOPPED, "NotificationJob")
+        };
+    }
 
 }

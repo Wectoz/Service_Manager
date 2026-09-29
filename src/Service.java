@@ -10,6 +10,23 @@ public class Service {
         this.environment = environment;
         this.status = status;
     }
+
+    public ServiceStatus getStatus() {
+        return status;
+    }
+
+    public Environment getEnvironment() {
+        return environment;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public void setVersion(String version) {
         this.version = version;
     }
