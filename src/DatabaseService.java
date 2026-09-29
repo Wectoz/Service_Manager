@@ -5,4 +5,13 @@ public class DatabaseService extends Service {
         super(name, version, environment, status);
         this.databaseType = databaseType;
     }
+    @Override
+    public void start() {
+        super.start();
+    }
+    @Override
+    public String getInfo() {
+        return super.getInfo() + "\n" +
+                "Database Type: " + databaseType;
+    }
 }
