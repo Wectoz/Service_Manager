@@ -148,6 +148,10 @@ public class ConsoleUI {
         System.out.println("\n--- Start Service ---");
         System.out.print("Enter service name: ");
         String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println("Service name cannot be empty.");
+            return;
+        }
         manager.startService(name);
     }
 
@@ -155,6 +159,10 @@ public class ConsoleUI {
         System.out.println("\n--- Stop Service ---");
         System.out.print("Enter service name: ");
         String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println("Service name cannot be empty.");
+            return;
+        }
         manager.stopService(name);
     }
 
@@ -162,6 +170,10 @@ public class ConsoleUI {
         System.out.println("\n--- Deploy Service ---");
         System.out.print("Enter service name: ");
         String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println("Service name cannot be empty.");
+            return;
+        }
         System.out.print("Enter new version: ");
         String version = scanner.nextLine();
         manager.deployService(name, version);
