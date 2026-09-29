@@ -81,6 +81,14 @@ public class ConsoleUI {
         String name = scanner.nextLine();
         System.out.print("Enter version: ");
         String version = scanner.nextLine();
+        if (version.isEmpty()) {
+            System.out.println("Version cannot be empty.");
+            return;
+        }
+        if (!version.matches("\\d+(\\.\\d+)*")) {
+            System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
+            return;
+        }
         
         System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
         System.out.print("Enter environment: ");
@@ -176,6 +184,14 @@ public class ConsoleUI {
         }
         System.out.print("Enter new version: ");
         String version = scanner.nextLine();
+        if (version.isEmpty()) {
+            System.out.println("Service version cannot be empty.");
+            return;
+        }
+        if (!version.matches("\\d+(\\.\\d+)*")) {
+            System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
+            return;
+        }
         manager.deployService(name, version);
     }
 
