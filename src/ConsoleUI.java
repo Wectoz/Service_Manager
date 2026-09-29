@@ -127,11 +127,13 @@ public class ConsoleUI {
         System.out.print("Enter search keyword: ");
         String keyword = scanner.nextLine();
         if (keyword.isEmpty()) {
-            System.out.println("Search keyword cannot be empty.");}
-        else if (keyword==null)
-            System.out.println("Search keyword cannot be null.");
-        else
-        manager.searchServices(keyword);
+            System.out.println("Search keyword cannot be empty.");
+        } else {
+            boolean found = manager.searchServices(keyword);
+            if (!found) {
+                System.out.println("Could not find keyword: " + keyword);
+            }
+        }
     }
 
     private void displayAllServices() {

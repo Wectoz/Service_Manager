@@ -18,12 +18,15 @@ public class ServiceManager {
             System.out.println(e.getMessage());
         }
     }
-    public void searchServices(String keyword) {
+    public boolean searchServices(String keyword) {
+        boolean found = false;
         for (Service service : services) {
             if (service.getName().contains(keyword)) {
                 System.out.println(service.getName());
+                found = true;
             }
         }
+        return found;
     }
     public Service findServiceByName(String name) throws ServiceNotFoundException {
         for (Service service : services) {
