@@ -20,8 +20,9 @@ public class ServiceManager {
     }
     public boolean searchServices(String keyword) {
         boolean found = false;
+        String lowerKeyword = keyword.toLowerCase();
         for (Service service : services) {
-            if (service.getName().contains(keyword)) {
+            if (service.getName().toLowerCase().contains(lowerKeyword)) {
                 System.out.println(service.getName());
                 found = true;
             }
@@ -30,7 +31,7 @@ public class ServiceManager {
     }
     public Service findServiceByName(String name) throws ServiceNotFoundException {
         for (Service service : services) {
-            if (service.getName().equals(name)) {
+            if (service.getName().equalsIgnoreCase(name)) {
                 return service;
             }
         }

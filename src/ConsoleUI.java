@@ -1,6 +1,8 @@
 import java.util.Scanner;
 
 public class ConsoleUI {
+    private static final String SERVICE_NAME_PROMPT = "Enter service name: ";
+    private static final String SERVICE_NAME_EMPTY_ERROR = "Service name cannot be empty.";
     private ServiceManager manager;
     private Scanner scanner;
 
@@ -85,7 +87,7 @@ public class ConsoleUI {
             System.out.println("Version cannot be empty.");
             return;
         }
-        if (!version.matches("\\d+(\\.\\d+)*")) {
+        if (!isValidVersion(version)) {
             System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
             return;
         }
@@ -120,14 +122,15 @@ public class ConsoleUI {
                 System.out.println("Invalid service type.");
                 return;
         }
-        System.out.println("Service added successfully.");
+        System.out.println(name + " added successfully.");
     }
 
     private void removeService() {
         System.out.println("\n--- Remove Service ---");
-        System.out.print("Enter service name: ");
+        System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         manager.removeService(name);
+        System.out.println(name + " removed successfully.");
     }
 
     private void searchService() {
@@ -154,32 +157,34 @@ public class ConsoleUI {
 
     private void startService() {
         System.out.println("\n--- Start Service ---");
-        System.out.print("Enter service name: ");
+        System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
-            System.out.println("Service name cannot be empty.");
+            System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
         manager.startService(name);
+        System.out.println(name + "started successfully.");
     }
 
     private void stopService() {
         System.out.println("\n--- Stop Service ---");
-        System.out.print("Enter service name: ");
+        System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
-            System.out.println("Service name cannot be empty.");
+            System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
         manager.stopService(name);
+        System.out.println(name + " stopped successfully.");
     }
 
     private void deployService() {
         System.out.println("\n--- Deploy Service ---");
-        System.out.print("Enter service name: ");
+        System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
-            System.out.println("Service name cannot be empty.");
+            System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
         System.out.print("Enter new version: ");
@@ -188,11 +193,12 @@ public class ConsoleUI {
             System.out.println("Service version cannot be empty.");
             return;
         }
-        if (!version.matches("\\d+(\\.\\d+)*")) {
+        if (!isValidVersion(version)) {
             System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
             return;
         }
         manager.deployService(name, version);
+        System.out.println(name + " deployed successfully.");
     }
 
     private void displayServicesByEnvironment() {
@@ -217,5 +223,17 @@ public class ConsoleUI {
                 System.out.println("Invalid input. Please enter a number.");
             }
         }
+    }
+
+    private boolean isValidVersion(String version) {
+        if (version.isEmpty()) return false;
+        String[] parts = version.split("\\.");
+        for (String part : parts) {
+            if (part.isEmpty()) return false;
+            for (char c : part.toCharArray()) {
+                if (!Character.isDigit(c)) return false;
+            }
+        }
+        return true;
     }
 }
