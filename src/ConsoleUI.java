@@ -103,34 +103,64 @@ public class ConsoleUI {
         System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
         System.out.print("Enter environment: ");
         String envStr = scanner.nextLine();
-        Environment environment = Environment.valueOf(envStr.toUpperCase());
+        Environment environment;
+        try {
+            environment = Environment.valueOf(envStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid environment. Must be DEVELOPMENT, STAGING, or PRODUCTION.");
+            return;
+        }
         
         System.out.println("Status: RUNNING, STOPPED, FAILED");
         System.out.print("Enter status: ");
         String statusStr = scanner.nextLine();
-        ServiceStatus status = ServiceStatus.valueOf(statusStr.toUpperCase());
+        ServiceStatus status;
+        try {
+            status = ServiceStatus.valueOf(statusStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid status. Must be RUNNING, STOPPED, or FAILED.");
+            return;
+        }
+        
+        Service newService = null;
         
         switch (type) {
             case 1:
                 System.out.print("Enter port: ");
                 String port = scanner.nextLine();
-                manager.addService(new WebService(name, version, environment, status, port));
+                try {
+                    newService = new WebService(name, version, environment, status, port);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid port: " + e.getMessage());
+                    return;
+                }
                 break;
             case 2:
                 System.out.print("Enter database type: ");
                 String dbType = scanner.nextLine();
-                manager.addService(new DatabaseService(name, version, environment, status, dbType));
+                if (dbType.isEmpty()) {
+                    System.out.println("Database type cannot be empty.");
+                    return;
+                }
+                newService = new DatabaseService(name, version, environment, status, dbType);
                 break;
             case 3:
                 System.out.print("Enter job type: ");
                 String jobType = scanner.nextLine();
-                manager.addService(new WorkerService(name, version, environment, status, jobType));
+                if (jobType.isEmpty()) {
+                    System.out.println("Job type cannot be empty.");
+                    return;
+                }
+                newService = new WorkerService(name, version, environment, status, jobType);
                 break;
             default:
                 System.out.println("Invalid service type.");
                 return;
         }
-        System.out.println(name + " added successfully.");
+        
+        if (manager.addService(newService)) {
+            System.out.println(name + " added successfully.");
+        }
     }
 
     private void removeService() {

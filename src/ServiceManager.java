@@ -9,8 +9,15 @@ public class ServiceManager {
         services = new ArrayList<>();
     }
     
-    public void addService(Service service) {
-        services.add(service);
+    public boolean addService(Service service) {
+        try {
+            findServiceByName(service.getName());
+            System.out.println("Service with name '" + service.getName() + "' already exists.");
+            return false;
+        } catch (ServiceNotFoundException e) {
+            services.add(service);
+            return true;
+        }
     }
     public boolean removeService(String serviceName) {
         try {
