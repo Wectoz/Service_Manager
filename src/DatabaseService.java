@@ -1,3 +1,4 @@
+// Database service with a specific database type (PostgreSQL, MySQL, etc.)
 public class DatabaseService extends Service {
     private String databaseType;
 
@@ -15,6 +16,7 @@ public class DatabaseService extends Service {
                 "Database Type: " + databaseType;
     }
     
+    // Some sample database services to load on startup
     public static DatabaseService[] getPredefinedServices() {
         return new DatabaseService[] {
             new DatabaseService("User Database", "2.1.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "PostgreSQL"),

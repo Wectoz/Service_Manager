@@ -1,3 +1,4 @@
+// Background worker service that handles specific job types
 public class WorkerService extends Service implements Deployable {
     private String jobType;
 
@@ -19,6 +20,7 @@ public class WorkerService extends Service implements Deployable {
         setVersion(newVersion);
     }
     
+    // Some sample worker services to load on startup
     public static WorkerService[] getPredefinedServices() {
         return new WorkerService[] {
             new WorkerService("Email Worker", "1.5.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "EmailJob"),
@@ -28,5 +30,4 @@ public class WorkerService extends Service implements Deployable {
             new WorkerService("Notification Worker", "1.1.0", Environment.DEVELOPMENT, ServiceStatus.STOPPED, "NotificationJob")
         };
     }
-
 }

@@ -1,3 +1,4 @@
+// Base class for all services in the system
 public class Service {
     private String name;
     private String version;
@@ -27,22 +28,24 @@ public class Service {
         return name;
     }
 
+    // Need this for when we deploy a new version
     public void setVersion(String version) {
         this.version = version;
     }
+    
     public void start() {
         status = ServiceStatus.RUNNING;
-
     }
-public void stop() {
+    
+    public void stop() {
         status = ServiceStatus.STOPPED;
-
-}
-public String getInfo() {
+    }
+    
+    // Returns a formatted string with all the service details
+    public String getInfo() {
         return "Name: " + name + "\n" +
                 "Version: " + version + "\n" +
                 "Environment: " + environment + "\n" +
                 "Status: " + status;
-
-}
+    }
 }

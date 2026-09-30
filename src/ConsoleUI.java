@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+// Console interface for managing services
 public class ConsoleUI {
     private static final String SERVICE_NAME_PROMPT = "Enter service name: ";
     private static final String SERVICE_NAME_EMPTY_ERROR = "Service name cannot be empty.";
@@ -11,6 +12,7 @@ public class ConsoleUI {
         this.scanner = new Scanner(System.in);
     }
 
+    // Main menu loop - keeps running until user picks exit
     public void start() {
         boolean running = true;
         
@@ -72,6 +74,7 @@ public class ConsoleUI {
         System.out.println("0. Exit");
     }
 
+    // Add a new service - user picks type and enters details
     private void addService() {
         System.out.println("\n--- Add Service ---");
         System.out.println("1. WebService");
@@ -81,6 +84,11 @@ public class ConsoleUI {
         
         System.out.print("Enter name: ");
         String name = scanner.nextLine();
+        if (name.isEmpty()) {
+            System.out.println(SERVICE_NAME_EMPTY_ERROR);
+            return;
+        }
+
         System.out.print("Enter version: ");
         String version = scanner.nextLine();
         if (version.isEmpty()) {
@@ -129,8 +137,9 @@ public class ConsoleUI {
         System.out.println("\n--- Remove Service ---");
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
-        manager.removeService(name);
-        System.out.println(name + " removed successfully.");
+        if (manager.removeService(name)) {
+            System.out.println(name + " removed successfully.");
+        }
     }
 
     private void searchService() {
@@ -163,8 +172,9 @@ public class ConsoleUI {
             System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
-        manager.startService(name);
-        System.out.println(name + "started successfully.");
+        if (manager.startService(name)) {
+            System.out.println(name + " started successfully.");
+        }
     }
 
     private void stopService() {
@@ -175,8 +185,9 @@ public class ConsoleUI {
             System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
-        manager.stopService(name);
-        System.out.println(name + " stopped successfully.");
+        if (manager.stopService(name)) {
+            System.out.println(name + " stopped successfully.");
+        }
     }
 
     private void deployService() {
@@ -197,8 +208,9 @@ public class ConsoleUI {
             System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
             return;
         }
-        manager.deployService(name, version);
-        System.out.println(name + " deployed successfully.");
+        if (manager.deployService(name, version)) {
+            System.out.println(name + " deployed successfully.");
+        }
     }
 
     private void displayServicesByEnvironment() {
@@ -214,6 +226,7 @@ public class ConsoleUI {
         manager.displayServiceStatistics();
     }
 
+    // Keep asking for input until we get a valid number
     private int getIntInput(String prompt) {
         while (true) {
             try {
@@ -225,6 +238,7 @@ public class ConsoleUI {
         }
     }
 
+    // Version should be numbers separated by dots like 1.0 or 2.5.1
     private boolean isValidVersion(String version) {
         if (version.isEmpty()) return false;
         String[] parts = version.split("\\.");

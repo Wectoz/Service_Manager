@@ -1,3 +1,4 @@
+// Web service that runs on a specific port
 public class WebService extends Service implements Deployable {
     private String port;
 
@@ -7,6 +8,7 @@ public class WebService extends Service implements Deployable {
         this.port = port;
     }
     
+    // Make sure the port is actually valid
     private void validatePort(String port) {
         try {
             int portNum = Integer.parseInt(port);
@@ -31,6 +33,7 @@ public class WebService extends Service implements Deployable {
         setVersion(newVersion);
     }
     
+    // Some sample web services to load on startup
     public static WebService[] getPredefinedServices() {
         return new WebService[] {
             new WebService("API Gateway", "1.0.0", Environment.PRODUCTION, ServiceStatus.RUNNING, "8080"),
@@ -40,5 +43,4 @@ public class WebService extends Service implements Deployable {
             new WebService("Notification Service", "1.2.0", Environment.DEVELOPMENT, ServiceStatus.STOPPED, "8083")
         };
     }
-
 }

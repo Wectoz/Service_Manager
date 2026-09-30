@@ -1,8 +1,9 @@
+// Entry point for the service manager application
 public class Main {
     public static void main(String[] args) {
         ServiceManager manager = new ServiceManager();
         
-        // Add predefined services
+        // Load some sample services so the app isn't empty on startup
         for (WebService ws : WebService.getPredefinedServices()) {
             manager.addService(ws);
         }
@@ -13,7 +14,7 @@ public class Main {
             manager.addService(worker);
         }
         
-        // Start the console UI
+        // Fire up the console interface
         ConsoleUI ui = new ConsoleUI(manager);
         ui.start();
     }
