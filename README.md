@@ -1,83 +1,35 @@
 # DevOps Service Manager
 
-## Project Idea
-Management of IT services in a DevOps/operations environment. The program should be able to register, display, search for, and manage different types of services running in environments such as development, staging, and production.
-The system will simulate common service-management tasks such as starting and stopping services, deploying new versions, filtering services by environment, and displaying service statistics.
+A console application for managing IT services in DevOps environments. Register, display, search, and manage services across development, staging, and production environments.
 
-## Superclass
-- Name: `Service`
-- Common fields:
-    - `name`
-    - `version`
-    - `environment`
-    - `status`
-- Common methods:
-    - `start()`
-    - `stop()`
-    - `getInfo()`
+## Features
 
-The `Service` class contains the fields and behavior shared by all service types.
+- **Service Management**: Add, remove, search, and display services
+- **Service Operations**: Start, stop, and deploy new versions
+- **Filtering**: View services by environment (Development, Staging, Production)
+- **Statistics**: Display service status counts and information
 
-## Subclasses
+## Architecture
 
-### WebService
-Represents a web service, such as an API or web application.
+### Core Classes
 
-Additional field:
-- `port`
+- **Service**: Base class with common fields (name, version, environment, status) and methods (start, stop, getInfo)
+- **WebService**: Web service with port field
+- **DatabaseService**: Database service with databaseType field
+- **WorkerService**: Background service with jobType field
+- **ServiceManager**: Business logic for service operations
+- **ConsoleUI**: Interactive console menu
 
-Overridden methods:
-- `start()`
-- `getInfo()`
+### Interface
 
-### DatabaseService
-Represents a database service.
+- **Deployable**: Implemented by WebService and WorkerService for version deployment
 
-Additional field:
-- `databaseType`
+### Enums
 
-Overridden methods:
-- `start()`
-- `getInfo()`
+- **ServiceStatus**: RUNNING, STOPPED, FAILED
+- **Environment**: DEVELOPMENT, STAGING, PRODUCTION
 
-### WorkerService
-Represents a background service that performs tasks such as sending emails or running scheduled jobs.
-
-Additional field:
-- `jobType`
-
-Overridden methods:
-- `start()`
-- `getInfo()`
-
-All three subclasses inherit from `Service` and provide their own implementation of the overridden methods.
-
-## Interface
-
-- Name: `Deployable`
-- Method:
-    - `deploy(String newVersion)`
-- Implemented by:
-    - `WebService`
-    - `WorkerService`
-
-The interface is used so that different service types can be handled polymorphically when a new version is deployed.
-
-## Collections and Polymorphism
-The program will store all services in a collection of `Service` objects.
-
-The collection will be used to:
-
-- Search for services by name
-- Filter services by environment
-- Display all registered services
-- Count services based on status
-- Handle different service subclasses polymorphically
-
-## Menu
-The application will include an interactive console menu.
-
-Available actions:
+## Menu Options
 
 1. Add a new service
 2. Remove a service
@@ -90,67 +42,8 @@ Available actions:
 9. Display service statistics
 0. Exit the program
 
-The menu will continue running until the user chooses to exit.
+## Error Handling
 
-## Service Manager
-A separate `ServiceManager` class will contain the main business logic of the application.
-
-Its responsibilities will include:
-
-- Adding services
-- Removing services
-- Searching for services
-- Starting and stopping services
-- Deploying new versions
-- Filtering services
-- Calculating service statistics
-
-The user interface will mainly handle input and output, while the `ServiceManager` handles the application logic.
-
-## Enums
-Enums will be used for values with a fixed set of valid options.
-
-Planned enums:
-
-- `ServiceStatus`
-    - `RUNNING`
-    - `STOPPED`
-    - `FAILED`
-
-- `Environment`
-    - `DEVELOPMENT`
-    - `STAGING`
-    - `PRODUCTION`
-
-## Error Scenarios
-
-### Invalid Port
-The user tries to create a `WebService` with an invalid port number.
-
-The program should handle this with an `IllegalArgumentException` and display a clear error message.
-
-### Service Not Found
-The user tries to search for, remove, start, stop, or deploy a service that does not exist.
-
-The program should handle this safely, using a custom `ServiceNotFoundException`.
-
-### Invalid Menu Input
-The user enters invalid input such as text, an empty value, or a menu option that does not exist.
-
-The program should handle the input without crashing and allow the user to try again.
-
-## Planned Structure
-
-- `Service`
-- `WebService`
-- `DatabaseService`
-- `WorkerService`
-- `Deployable`
-- `ServiceManager`
-- `ConsoleUI`
-- `ServiceStatus`
-- `Environment`
-- `ServiceNotFoundException`
-
-## Motivation and Design Reflection
-This section will be completed later in the project.
+- Invalid port numbers throw `IllegalArgumentException`
+- Missing services throw `ServiceNotFoundException`
+- Invalid menu input is handled gracefully with retry
