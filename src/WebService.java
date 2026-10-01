@@ -19,18 +19,24 @@ public class WebService extends Service implements Deployable {
             throw new IllegalArgumentException("Invalid port format: " + port + ". Port must be a number.");
         }
     }
+    
     @Override
+    // Start web service with port-specific logging
     public void start() {
         System.out.println("Starting on port " + port);
         super.start();
         System.out.println("Listening on port " + port);
     }
+    
     @Override
+    // Return service info including port
     public String getInfo() {
         return super.getInfo() + "\n" +
                 "Port: " + port;
     }
+    
     @Override
+    // Deploy new version by updating version field
     public void deploy(String newVersion) {
         setVersion(newVersion);
     }

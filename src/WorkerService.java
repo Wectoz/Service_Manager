@@ -4,20 +4,39 @@ public class WorkerService extends Service implements Deployable {
 
     public WorkerService(String name, String version, Environment environment, ServiceStatus status, String jobType) {
         super(name, version, environment, status);
+        validateJobType(jobType);
         this.jobType = jobType;
     }
+
+    // Validate that job type is one of the allowed values
+    private void validateJobType(String jobType) {
+        if (jobType == null || jobType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Job type cannot be empty.");
+        }
+        String normalized = jobType.trim();
+        java.util.Set<String> validTypes = java.util.Set.of("EmailJob", "ReportJob", "CleanupJob", "BackupJob", "NotificationJob");
+        if (!validTypes.contains(normalized)) {
+            throw new IllegalArgumentException("Invalid job type: " + jobType + ". Must be one of: EmailJob, ReportJob, CleanupJob, BackupJob, NotificationJob");
+        }
+    }
+    
     @Override
+    // Start worker with job-type-specific logging
     public void start() {
         System.out.println("Starting " + jobType + " worker");
         super.start();
         System.out.println(jobType + " worker running");
     }
+    
     @Override
+    // Return service info including job type
     public String getInfo() {
         return super.getInfo() + "\n" +
                 "Job Type: " + jobType;
     }
+    
     @Override
+    // Deploy new version by updating version field
     public void deploy(String newVersion) {
         setVersion(newVersion);
     }

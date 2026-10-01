@@ -33,10 +33,12 @@ public class Service {
         this.version = version;
     }
     
+    // Set service status to RUNNING
     public void start() {
         status = ServiceStatus.RUNNING;
     }
     
+    // Set service status to STOPPED
     public void stop() {
         status = ServiceStatus.STOPPED;
     }

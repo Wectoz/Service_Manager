@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 // Manages all the services in the system - add, remove, start, stop, deploy
@@ -9,6 +10,7 @@ public class ServiceManager {
         services = new ArrayList<>();
     }
     
+    // Add a service if it doesn't already exist
     public boolean addService(Service service) {
         try {
             findServiceByName(service.getName());
@@ -19,6 +21,8 @@ public class ServiceManager {
             return true;
         }
     }
+    
+    // Remove a service by name
     public boolean removeService(String serviceName) {
         try {
             Service service = findServiceByName(serviceName);
@@ -53,9 +57,12 @@ public class ServiceManager {
         throw new ServiceNotFoundException("Service not found: " + name);
     }
     
+    // Return an unmodifiable list of all services
     public List<Service> getServices() {
-        return services;
+        return Collections.unmodifiableList(services);
     }
+    
+    // Start a service by name
     public boolean startService(String serviceName) {
         try {
             Service service = findServiceByName(serviceName);
@@ -67,6 +74,7 @@ public class ServiceManager {
         }
     }
     
+    // Stop a service by name
     public boolean stopService(String serviceName) {
         try {
             Service service = findServiceByName(serviceName);

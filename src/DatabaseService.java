@@ -4,15 +4,32 @@ public class DatabaseService extends Service {
 
     public DatabaseService(String name, String version, Environment environment, ServiceStatus status, String databaseType) {
         super(name, version, environment, status);
+        validateDatabaseType(databaseType);
         this.databaseType = databaseType;
     }
+
+    // Validate that database type is one of the allowed values
+    private void validateDatabaseType(String databaseType) {
+        if (databaseType == null || databaseType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Database type cannot be empty.");
+        }
+        String normalized = databaseType.trim();
+        java.util.Set<String> validTypes = java.util.Set.of("PostgreSQL", "MySQL", "Redis", "MongoDB", "Elasticsearch");
+        if (!validTypes.contains(normalized)) {
+            throw new IllegalArgumentException("Invalid database type: " + databaseType + ". Must be one of: PostgreSQL, MySQL, Redis, MongoDB, Elasticsearch");
+        }
+    }
+    
     @Override
+    // Start database with database-type-specific logging
     public void start() {
         System.out.println("Starting " + databaseType + " database");
         super.start();
         System.out.println(databaseType + " database ready");
     }
+    
     @Override
+    // Return service info including database type
     public String getInfo() {
         return super.getInfo() + "\n" +
                 "Database Type: " + databaseType;

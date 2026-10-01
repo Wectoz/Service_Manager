@@ -60,6 +60,7 @@ public class ConsoleUI {
         scanner.close();
     }
 
+    // Display the main menu options
     private void displayMenu() {
         System.out.println("=== Service Manager Menu ===");
         System.out.println("1. Add a new service");
@@ -163,6 +164,7 @@ public class ConsoleUI {
         }
     }
 
+    // Remove a service by name
     private void removeService() {
         System.out.println("\n--- Remove Service ---");
         System.out.print(SERVICE_NAME_PROMPT);
@@ -172,6 +174,7 @@ public class ConsoleUI {
         }
     }
 
+    // Search for services by keyword
     private void searchService() {
         System.out.println("\n--- Search Service ---");
         System.out.print("Enter search keyword: ");
@@ -186,6 +189,7 @@ public class ConsoleUI {
         }
     }
 
+    // Display all registered services
     private void displayAllServices() {
         System.out.println("\n--- All Services ---");
         for (Service service : manager.getServices()) {
@@ -194,6 +198,7 @@ public class ConsoleUI {
         }
     }
 
+    // Start a service by name
     private void startService() {
         System.out.println("\n--- Start Service ---");
         System.out.print(SERVICE_NAME_PROMPT);
@@ -207,6 +212,7 @@ public class ConsoleUI {
         }
     }
 
+    // Stop a service by name
     private void stopService() {
         System.out.println("\n--- Stop Service ---");
         System.out.print(SERVICE_NAME_PROMPT);
@@ -220,6 +226,7 @@ public class ConsoleUI {
         }
     }
 
+    // Deploy a new version of a service
     private void deployService() {
         System.out.println("\n--- Deploy Service ---");
         System.out.print(SERVICE_NAME_PROMPT);
@@ -243,6 +250,7 @@ public class ConsoleUI {
         }
     }
 
+    // Display services filtered by environment
     private void displayServicesByEnvironment() {
         System.out.println("\n--- Services by Environment ---");
         System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
@@ -251,6 +259,7 @@ public class ConsoleUI {
         manager.displayServicesInEnvironment(env.toUpperCase());
     }
 
+    // Display service statistics
     private void displayStatistics() {
         System.out.println("\n--- Service Statistics ---");
         manager.displayServiceStatistics();
