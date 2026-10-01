@@ -99,7 +99,7 @@ public class ServiceManager {
     public void displayServicesInEnvironment(String environment) {
         boolean found = false;
         for (Service service : services) {
-            if (service.getEnvironment().toString().equals(environment)) {
+            if (service.getEnvironment().equals(Environment.valueOf(environment))) {
                 System.out.println(service.getName());
                 found = true;
             }

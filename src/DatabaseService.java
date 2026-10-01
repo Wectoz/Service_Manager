@@ -8,7 +8,9 @@ public class DatabaseService extends Service {
     }
     @Override
     public void start() {
+        System.out.println("Starting " + databaseType + " database");
         super.start();
+        System.out.println(databaseType + " database ready");
     }
     @Override
     public String getInfo() {

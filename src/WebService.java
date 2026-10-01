@@ -21,7 +21,9 @@ public class WebService extends Service implements Deployable {
     }
     @Override
     public void start() {
+        System.out.println("Starting on port " + port);
         super.start();
+        System.out.println("Listening on port " + port);
     }
     @Override
     public String getInfo() {

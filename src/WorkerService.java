@@ -8,7 +8,9 @@ public class WorkerService extends Service implements Deployable {
     }
     @Override
     public void start() {
+        System.out.println("Starting " + jobType + " worker");
         super.start();
+        System.out.println(jobType + " worker running");
     }
     @Override
     public String getInfo() {
