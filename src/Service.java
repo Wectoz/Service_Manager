@@ -1,8 +1,8 @@
 // Base class for all services in the system
 public class Service {
-    private String name;
+    private final String name;
     private String version;
-    private Environment environment;
+    private final Environment environment;
     private ServiceStatus status;
 
     public Service(String name, String version, Environment environment, ServiceStatus status) {

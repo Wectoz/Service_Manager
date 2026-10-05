@@ -1,6 +1,6 @@
 // Entry point for the service manager application
 public class Main {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         ServiceManager manager = new ServiceManager();
         
         // Load some sample services so the app isn't empty on startup

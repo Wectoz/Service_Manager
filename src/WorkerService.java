@@ -1,6 +1,6 @@
 // Background worker service that handles specific job types
 public class WorkerService extends Service implements Deployable {
-    private String jobType;
+    private final String jobType;
 
     public WorkerService(String name, String version, Environment environment, ServiceStatus status, String jobType) {
         super(name, version, environment, status);

@@ -1,10 +1,12 @@
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 // Console interface for managing services
 public class ConsoleUI {
     private static final String SERVICE_NAME_PROMPT = "Enter service name: ";
     private static final String SERVICE_NAME_EMPTY_ERROR = "Service name cannot be empty.";
-    private ServiceManager manager;
+    private final ServiceManager manager;
     private Scanner scanner;
 
     public ConsoleUI(ServiceManager manager) {
@@ -128,8 +130,7 @@ public class ConsoleUI {
         
         switch (type) {
             case 1:
-                System.out.print("Enter port: ");
-                String port = scanner.nextLine();
+                int port = getIntInput("Enter port: ");
                 try {
                     newService = new WebService(name, version, environment, status, port);
                 } catch (IllegalArgumentException e) {
@@ -162,6 +163,8 @@ public class ConsoleUI {
         
         if (manager.addService(newService)) {
             System.out.println(name + " added successfully.");
+        } else {
+            System.out.println("Service with name '" + name + "' already exists.");
         }
     }
 
@@ -172,6 +175,8 @@ public class ConsoleUI {
         String name = scanner.nextLine();
         if (manager.removeService(name)) {
             System.out.println(name + " removed successfully.");
+        } else {
+            System.out.println("Service not found: " + name);
         }
     }
 
@@ -183,9 +188,13 @@ public class ConsoleUI {
         if (keyword.isEmpty()) {
             System.out.println("Search keyword cannot be empty.");
         } else {
-            boolean found = manager.searchServices(keyword);
-            if (!found) {
+            List<String> results = manager.searchServices(keyword);
+            if (results.isEmpty()) {
                 System.out.println("Could not find keyword: " + keyword);
+            } else {
+                for (String serviceName : results) {
+                    System.out.println(serviceName);
+                }
             }
         }
     }
@@ -210,6 +219,8 @@ public class ConsoleUI {
         }
         if (manager.startService(name)) {
             System.out.println(name + " started successfully.");
+        } else {
+            System.out.println("Service " + name + " is already running or not found.");
         }
     }
 
@@ -224,6 +235,8 @@ public class ConsoleUI {
         }
         if (manager.stopService(name)) {
             System.out.println(name + " stopped successfully.");
+        } else {
+            System.out.println("Service " + name + " is already stopped or not found.");
         }
     }
 
@@ -248,6 +261,8 @@ public class ConsoleUI {
         }
         if (manager.deployService(name, version)) {
             System.out.println(name + " deployed successfully.");
+        } else {
+            System.out.println("Service " + name + " is not deployable or not found.");
         }
     }
 
@@ -257,13 +272,18 @@ public class ConsoleUI {
         System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
         System.out.print("Enter environment: ");
         String env = scanner.nextLine();
-        manager.displayServicesInEnvironment(env.toUpperCase());
-    }
-
-    // Display service statistics
-    private void displayStatistics() {
-        System.out.println("\n--- Service Statistics ---");
-        manager.displayServiceStatistics();
+        try {
+            List<Service> services = manager.getServicesByEnvironment(env.toUpperCase());
+            if (services.isEmpty()) {
+                System.out.println("No services found in environment: " + env);
+            } else {
+                for (Service service : services) {
+                    System.out.println(service.getName());
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid environment: " + env);
+        }
     }
 
     // Keep asking for input until we get a valid number
@@ -290,5 +310,15 @@ public class ConsoleUI {
             return false;
         }
         return version.matches("^\\d{1,5}(\\.\\d{1,5}){0,2}$");
+    }
+
+    // Display service statistics
+    private void displayStatistics() {
+        System.out.println("\n--- Service Statistics ---");
+        Map<ServiceStatus, Integer> stats = manager.getServiceStatistics();
+        System.out.println("Running: " + stats.get(ServiceStatus.RUNNING));
+        System.out.println("Stopped: " + stats.get(ServiceStatus.STOPPED));
+        System.out.println("Failed: " + stats.get(ServiceStatus.FAILED));
+        System.out.println("Total: " + (stats.get(ServiceStatus.RUNNING) + stats.get(ServiceStatus.STOPPED) + stats.get(ServiceStatus.FAILED)));
     }
 }

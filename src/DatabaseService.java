@@ -1,6 +1,6 @@
 // Database service with a specific database type (PostgreSQL, MySQL, etc.)
 public class DatabaseService extends Service implements Deployable {
-    private String databaseType;
+    private final String databaseType;
 
     public DatabaseService(String name, String version, Environment environment, ServiceStatus status, String databaseType) {
         super(name, version, environment, status);

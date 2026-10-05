@@ -1,10 +1,8 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 // Manages all the services in the system - add, remove, start, stop, deploy
 public class ServiceManager {
-    private List<Service> services;
+    private final List<Service> services;
 
     public ServiceManager() {
         services = new ArrayList<>();
@@ -14,7 +12,6 @@ public class ServiceManager {
     public boolean addService(Service service) {
         try {
             findServiceByName(service.getName());
-            System.out.println("Service with name '" + service.getName() + "' already exists.");
             return false;
         } catch (ServiceNotFoundException e) {
             services.add(service);
@@ -29,22 +26,20 @@ public class ServiceManager {
             services.remove(service);
             return true;
         } catch (ServiceNotFoundException e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
     
     // Search for services by name (case-insensitive)
-    public boolean searchServices(String keyword) {
-        boolean found = false;
+    public List<String> searchServices(String keyword) {
+        List<String> results = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
         for (Service service : services) {
             if (service.getName().toLowerCase().contains(lowerKeyword)) {
-                System.out.println(service.getName());
-                found = true;
+                results.add(service.getName());
             }
         }
-        return found;
+        return results;
     }
     
     // Find a service by its name - throws if not found
@@ -67,13 +62,11 @@ public class ServiceManager {
         try {
             Service service = findServiceByName(serviceName);
             if (service.getStatus() == ServiceStatus.RUNNING) {
-                System.out.println("Service " + serviceName + " is already running.");
                 return false;
             }
             service.start();
             return true;
         } catch (ServiceNotFoundException e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -83,13 +76,11 @@ public class ServiceManager {
         try {
             Service service = findServiceByName(serviceName);
             if (service.getStatus() == ServiceStatus.STOPPED) {
-                System.out.println("Service " + serviceName + " is already stopped.");
                 return false;
             }
             service.stop();
             return true;
         } catch (ServiceNotFoundException e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
@@ -100,60 +91,35 @@ public class ServiceManager {
             Service service = findServiceByName(serviceName);
             if (service instanceof Deployable) {
                 ((Deployable) service).deploy(newVersion);
-                System.out.println("Deployed new version " + newVersion + " for service " + service.getName());
                 return true;
             } else {
-                System.out.println("Service " + serviceName + " is not deployable");
                 return false;
             }
         } catch (ServiceNotFoundException e) {
-            System.out.println(e.getMessage());
             return false;
         }
     }
     // Show all services in a specific environment
-    public void displayServicesInEnvironment(String environment) {
-        boolean found = false;
+    public List<Service> getServicesByEnvironment(String environment) {
+        List<Service> servicesInEnvironment = new ArrayList<>();
         for (Service service : services) {
-            try {
-                if (service.getEnvironment().equals(Environment.valueOf(environment))) {
-                    System.out.println(service.getName());
-                    found = true;
-                }
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid environment: " + environment);
-                return;
+            if (service.getEnvironment().equals(Environment.valueOf(environment))) {
+                servicesInEnvironment.add(service);
             }
         }
-        if (!found) {
-            System.out.println("No services found in environment: " + environment);
-        }
+        return servicesInEnvironment;
     }
     
     // Count how many services are in each status
-    public void displayServiceStatistics() {
-        int running = 0;
-        int stopped = 0;
-        int failed = 0;
+    public Map<ServiceStatus, Integer> getServiceStatistics() {
+        Map<ServiceStatus, Integer> statusCount = new HashMap<>();
+        statusCount.put(ServiceStatus.RUNNING, 0);
+        statusCount.put(ServiceStatus.STOPPED, 0);
+        statusCount.put(ServiceStatus.FAILED, 0);
         
         for (Service service : services) {
-            switch (service.getStatus()) {
-                case RUNNING:
-                    running++;
-                    break;
-                case STOPPED:
-                    stopped++;
-                    break;
-                case FAILED:
-                    failed++;
-                    break;
-            }
+            statusCount.put(service.getStatus(), statusCount.get(service.getStatus()) + 1);
         }
-        
-        System.out.println("Service Statistics:");
-        System.out.println("Running: " + running);
-        System.out.println("Stopped: " + stopped);
-        System.out.println("Failed: " + failed);
-        System.out.println("Total: " + services.size());
+        return statusCount;
     }
 }
