@@ -66,6 +66,10 @@ public class ServiceManager {
     public boolean startService(String serviceName) {
         try {
             Service service = findServiceByName(serviceName);
+            if (service.getStatus() == ServiceStatus.RUNNING) {
+                System.out.println("Service " + serviceName + " is already running.");
+                return false;
+            }
             service.start();
             return true;
         } catch (ServiceNotFoundException e) {
@@ -78,6 +82,10 @@ public class ServiceManager {
     public boolean stopService(String serviceName) {
         try {
             Service service = findServiceByName(serviceName);
+            if (service.getStatus() == ServiceStatus.STOPPED) {
+                System.out.println("Service " + serviceName + " is already stopped.");
+                return false;
+            }
             service.stop();
             return true;
         } catch (ServiceNotFoundException e) {
@@ -107,9 +115,14 @@ public class ServiceManager {
     public void displayServicesInEnvironment(String environment) {
         boolean found = false;
         for (Service service : services) {
-            if (service.getEnvironment().equals(Environment.valueOf(environment))) {
-                System.out.println(service.getName());
-                found = true;
+            try {
+                if (service.getEnvironment().equals(Environment.valueOf(environment))) {
+                    System.out.println(service.getName());
+                    found = true;
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid environment: " + environment);
+                return;
             }
         }
         if (!found) {

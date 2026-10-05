@@ -9,55 +9,56 @@ public class ConsoleUI {
 
     public ConsoleUI(ServiceManager manager) {
         this.manager = manager;
-        this.scanner = new Scanner(System.in);
     }
 
     // Main menu loop - keeps running until user picks exit
     public void start() {
-        boolean running = true;
-        
-        while (running) {
-            displayMenu();
-            int choice = getIntInput("Enter your choice: ");
-            
-            switch (choice) {
-                case 1:
-                    addService();
-                    break;
-                case 2:
-                    removeService();
-                    break;
-                case 3:
-                    searchService();
-                    break;
-                case 4:
-                    displayAllServices();
-                    break;
-                case 5:
-                    startService();
-                    break;
-                case 6:
-                    stopService();
-                    break;
-                case 7:
-                    deployService();
-                    break;
-                case 8:
-                    displayServicesByEnvironment();
-                    break;
-                case 9:
-                    displayStatistics();
-                    break;
-                case 0:
-                    running = false;
-                    System.out.println("Exiting Service Manager...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
+        try (Scanner scanner = new Scanner(System.in)) {
+            this.scanner = scanner;
+            boolean running = true;
+
+            while (running) {
+                displayMenu();
+                int choice = getIntInput("Enter your choice: ");
+
+                switch (choice) {
+                    case 1:
+                        addService();
+                        break;
+                    case 2:
+                        removeService();
+                        break;
+                    case 3:
+                        searchService();
+                        break;
+                    case 4:
+                        displayAllServices();
+                        break;
+                    case 5:
+                        startService();
+                        break;
+                    case 6:
+                        stopService();
+                        break;
+                    case 7:
+                        deployService();
+                        break;
+                    case 8:
+                        displayServicesByEnvironment();
+                        break;
+                    case 9:
+                        displayStatistics();
+                        break;
+                    case 0:
+                        running = false;
+                        System.out.println("Exiting Service Manager...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+                System.out.println();
             }
-            System.out.println();
         }
-        scanner.close();
     }
 
     // Display the main menu options
