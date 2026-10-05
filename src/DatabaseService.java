@@ -1,5 +1,5 @@
 // Database service with a specific database type (PostgreSQL, MySQL, etc.)
-public class DatabaseService extends Service {
+public class DatabaseService extends Service implements Deployable {
     private String databaseType;
 
     public DatabaseService(String name, String version, Environment environment, ServiceStatus status, String databaseType) {
@@ -33,6 +33,12 @@ public class DatabaseService extends Service {
     public String getInfo() {
         return super.getInfo() + "\n" +
                 "Database Type: " + databaseType;
+    }
+
+    @Override
+    // Deploy new version by updating version field
+    public void deploy(String newVersion) {
+        setVersion(newVersion);
     }
     
     // Some sample database services to load on startup
