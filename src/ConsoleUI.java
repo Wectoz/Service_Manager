@@ -86,7 +86,7 @@ public class ConsoleUI {
         System.out.println("3. WorkerService");
         int type = getIntInput("Select service type: ");
         
-        System.out.print("Enter name: ");
+        System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
             System.out.println(SERVICE_NAME_EMPTY_ERROR);
