@@ -1,5 +1,8 @@
 // Background worker service that handles specific job types
 public class WorkerService extends Service implements Deployable {
+    private static final java.util.Set<String> VALID_JOB_TYPES = java.util.Set.of(
+        "EmailJob", "ReportJob", "CleanupJob", "BackupJob", "NotificationJob"
+    );
     private final String jobType;
 
     public WorkerService(String name, String version, Environment environment, ServiceStatus status, String jobType) {
@@ -14,9 +17,8 @@ public class WorkerService extends Service implements Deployable {
             throw new IllegalArgumentException("Job type cannot be empty.");
         }
         String normalized = jobType.trim();
-        java.util.Set<String> validTypes = java.util.Set.of("EmailJob", "ReportJob", "CleanupJob", "BackupJob", "NotificationJob");
-        if (!validTypes.contains(normalized)) {
-            throw new IllegalArgumentException("Invalid job type: " + jobType + ". Must be one of: EmailJob, ReportJob, CleanupJob, BackupJob, NotificationJob");
+        if (!VALID_JOB_TYPES.contains(normalized)) {
+            throw new IllegalArgumentException("Invalid job type: " + jobType + ". Must be one of: " + VALID_JOB_TYPES);
         }
     }
     

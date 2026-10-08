@@ -1,5 +1,8 @@
 // Database service with a specific database type (PostgreSQL, MySQL, etc.)
 public class DatabaseService extends Service implements Deployable {
+    private static final java.util.Set<String> VALID_DATABASE_TYPES = java.util.Set.of(
+        "PostgreSQL", "MySQL", "Redis", "MongoDB", "Elasticsearch"
+    );
     private final String databaseType;
 
     public DatabaseService(String name, String version, Environment environment, ServiceStatus status, String databaseType) {
@@ -14,9 +17,8 @@ public class DatabaseService extends Service implements Deployable {
             throw new IllegalArgumentException("Database type cannot be empty.");
         }
         String normalized = databaseType.trim();
-        java.util.Set<String> validTypes = java.util.Set.of("PostgreSQL", "MySQL", "Redis", "MongoDB", "Elasticsearch");
-        if (!validTypes.contains(normalized)) {
-            throw new IllegalArgumentException("Invalid database type: " + databaseType + ". Must be one of: PostgreSQL, MySQL, Redis, MongoDB, Elasticsearch");
+        if (!VALID_DATABASE_TYPES.contains(normalized)) {
+            throw new IllegalArgumentException("Invalid database type: " + databaseType + ". Must be one of: " + VALID_DATABASE_TYPES);
         }
     }
     
