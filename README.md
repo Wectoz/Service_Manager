@@ -22,7 +22,7 @@ A console application for managing IT services in DevOps environments. Register,
 
 ### Interface
 
-- **Deployable**: Implemented by WebService and WorkerService for version deployment
+- **Deployable**: Implemented by Service for version deployment (inherited by all service types)
 
 ### Enums
 
