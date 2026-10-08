@@ -302,11 +302,9 @@ public class ConsoleUI {
     // Max 3 segments, max 5 digits per segment, max 20 total characters
     private boolean isValidVersion(String version) {
         if (version == null || version.isEmpty()) {
-            System.out.println("Service version cannot be empty.");
             return false;
         }
         if (version.length() > 20) {
-            System.out.println("Version too long (max 20 characters).");
             return false;
         }
         return version.matches("^\\d{1,5}(\\.\\d{1,5}){0,2}$");
