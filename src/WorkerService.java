@@ -35,12 +35,6 @@ public class WorkerService extends Service implements Deployable {
                 "Job Type: " + jobType;
     }
     
-    @Override
-    // Deploy new version by updating version field
-    public void deploy(String newVersion) {
-        setVersion(newVersion);
-    }
-    
     // Some sample worker services to load on startup
     public static WorkerService[] getPredefinedServices() {
         return new WorkerService[] {

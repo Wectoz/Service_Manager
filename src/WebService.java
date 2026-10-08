@@ -30,12 +30,6 @@ public class WebService extends Service implements Deployable {
                 "Port: " + port;
     }
     
-    @Override
-    // Deploy new version by updating version field
-    public void deploy(String newVersion) {
-        setVersion(newVersion);
-    }
-    
     // Some sample web services to load on startup
     public static WebService[] getPredefinedServices() {
         return new WebService[] {

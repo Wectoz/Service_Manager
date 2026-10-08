@@ -1,5 +1,5 @@
 // Base class for all services in the system
-public class Service {
+public class Service implements Deployable {
     private final String name;
     private String version;
     private final Environment environment;
@@ -32,7 +32,13 @@ public class Service {
     public void setVersion(String version) {
         this.version = version;
     }
-    
+
+    @Override
+    // Deploy new version by updating version field
+    public void deploy(String newVersion) {
+        setVersion(newVersion);
+    }
+
     // Set service status to RUNNING
     public void start() {
         status = ServiceStatus.RUNNING;

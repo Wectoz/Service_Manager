@@ -35,12 +35,6 @@ public class DatabaseService extends Service implements Deployable {
                 "Database Type: " + databaseType;
     }
 
-    @Override
-    // Deploy new version by updating version field
-    public void deploy(String newVersion) {
-        setVersion(newVersion);
-    }
-    
     // Some sample database services to load on startup
     public static DatabaseService[] getPredefinedServices() {
         return new DatabaseService[] {
