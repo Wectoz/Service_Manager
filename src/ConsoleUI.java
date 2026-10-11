@@ -9,6 +9,7 @@ public class ConsoleUI {
     private final ServiceManager manager;
     private Scanner scanner;
 
+    // Constructor - initialize with service manager
     public ConsoleUI(ServiceManager manager) {
         this.manager = manager;
     }
@@ -81,11 +82,100 @@ public class ConsoleUI {
     // Add a new service - user picks type and enters details
     private void addService() {
         System.out.println("\n--- Add Service ---");
-        System.out.println("1. WebService");
-        System.out.println("2. DatabaseService");
-        System.out.println("3. WorkerService");
-        int type = getIntInput("Select service type: ");
-        
+        System.out.println("1. WebService (web)");
+        System.out.println("2. DatabaseService (db)");
+        System.out.println("3. WorkerService (worker)");
+        System.out.print("Enter service type: ");
+        String typeInput = scanner.nextLine().toUpperCase();
+        int type;
+
+        // Match by number or prefix
+        if (typeInput.equals("1") || typeInput.startsWith("W")) {
+            type = 1;
+        } else if (typeInput.equals("2") || typeInput.startsWith("D")) {
+            type = 2;
+        } else if (typeInput.equals("3") || typeInput.startsWith("WO")) {
+            type = 3;
+        } else {
+            System.out.println("Invalid service type. Must be 1, 2, 3, web, db, or worker.");
+            return;
+        }
+
+        // Get type-specific field first
+        Integer port = null;
+        String dbType = null;
+        String jobType = null;
+
+        switch (type) {
+            case 1:
+                System.out.println("\n--- Choose Port ---");
+                System.out.println("Port must be between 1 and 65535");
+                port = getIntInput("Enter port: ");
+                try {
+                    // Validate port by creating temporary service
+                    new WebService("temp", "1.0", Environment.DEVELOPMENT, ServiceStatus.STOPPED, port);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid port: " + e.getMessage());
+                    return;
+                }
+                break;
+            case 2:
+                System.out.println("\n--- Choose Database Type ---");
+                System.out.println("1. PostgreSQL");
+                System.out.println("2. MySQL");
+                System.out.println("3. Redis");
+                System.out.println("4. MongoDB");
+                System.out.println("5. Elasticsearch");
+                System.out.print("Enter database type: ");
+                dbType = scanner.nextLine();
+                if (dbType.isEmpty()) {
+                    System.out.println("Database type cannot be empty.");
+                    return;
+                }
+                // Match by number or prefix
+                String dbTypeUpper = dbType.toUpperCase();
+                if (dbTypeUpper.equals("1") || dbTypeUpper.startsWith("P")) {
+                    dbType = "PostgreSQL";
+                } else if (dbTypeUpper.equals("2") || dbTypeUpper.startsWith("M")) {
+                    dbType = "MySQL";
+                } else if (dbTypeUpper.equals("3") || dbTypeUpper.startsWith("R")) {
+                    dbType = "Redis";
+                } else if (dbTypeUpper.equals("4") || dbTypeUpper.startsWith("MO")) {
+                    dbType = "MongoDB";
+                } else if (dbTypeUpper.equals("5") || dbTypeUpper.startsWith("E")) {
+                    dbType = "Elasticsearch";
+                }
+                break;
+            case 3:
+                System.out.println("\n--- Choose Job Type ---");
+                System.out.println("1. EmailJob");
+                System.out.println("2. ReportJob");
+                System.out.println("3. CleanupJob");
+                System.out.println("4. BackupJob");
+                System.out.println("5. NotificationJob");
+                System.out.print("Enter job type: ");
+                jobType = scanner.nextLine();
+                if (jobType.isEmpty()) {
+                    System.out.println("Job type cannot be empty.");
+                    return;
+                }
+                // Match by number or prefix
+                String jobTypeUpper = jobType.toUpperCase();
+                if (jobTypeUpper.equals("1") || jobTypeUpper.startsWith("E")) {
+                    jobType = "EmailJob";
+                } else if (jobTypeUpper.equals("2") || jobTypeUpper.startsWith("R")) {
+                    jobType = "ReportJob";
+                } else if (jobTypeUpper.equals("3") || jobTypeUpper.startsWith("C")) {
+                    jobType = "CleanupJob";
+                } else if (jobTypeUpper.equals("4") || jobTypeUpper.startsWith("B")) {
+                    jobType = "BackupJob";
+                } else if (jobTypeUpper.equals("5") || jobTypeUpper.startsWith("N")) {
+                    jobType = "NotificationJob";
+                }
+                break;
+        }
+
+        // Now get common fields
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
@@ -93,74 +183,82 @@ public class ConsoleUI {
             return;
         }
 
+        System.out.println("Version format: numbers separated by dots (e.g., 1, 1.0, 2.5.1)");
         System.out.print("Enter version: ");
         String version = scanner.nextLine();
         if (version.isEmpty()) {
             System.out.println("Version cannot be empty.");
             return;
         }
+        // Validate version format
         if (!isValidVersion(version)) {
             System.out.println("Version must contain only numbers (e.g., 1, 1.0, 2.5.1).");
             return;
         }
-        
-        System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
+
+        System.out.println("\n--- Choose Environment ---");
+        System.out.println("1. DEVELOPMENT (dev)");
+        System.out.println("2. STAGING (staging)");
+        System.out.println("3. PRODUCTION (prod)");
         System.out.print("Enter environment: ");
-        String envStr = scanner.nextLine();
+        String envStr = scanner.nextLine().toUpperCase();
         Environment environment;
         try {
-            environment = Environment.valueOf(envStr.toUpperCase());
+            // Match by number or prefix
+            if (envStr.equals("1") || envStr.startsWith("D")) {
+                environment = Environment.DEVELOPMENT;
+            } else if (envStr.equals("2") || envStr.startsWith("S")) {
+                environment = Environment.STAGING;
+            } else if (envStr.equals("3") || envStr.startsWith("P")) {
+                environment = Environment.PRODUCTION;
+            } else {
+                // Try exact match as fallback
+                environment = Environment.valueOf(envStr);
+            }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid environment. Must be DEVELOPMENT, STAGING, or PRODUCTION.");
+            System.out.println("Invalid environment. Must be 1, 2, 3, DEVELOPMENT, STAGING, or PRODUCTION.");
             return;
         }
-        
-        System.out.println("Status: RUNNING, STOPPED, FAILED");
+
+        System.out.println("\n--- Choose Status ---");
+        System.out.println("1. RUNNING (run)");
+        System.out.println("2. STOPPED (stop)");
+        System.out.println("3. FAILED (fail)");
         System.out.print("Enter status: ");
-        String statusStr = scanner.nextLine();
+        String statusStr = scanner.nextLine().toUpperCase();
         ServiceStatus status;
         try {
-            status = ServiceStatus.valueOf(statusStr.toUpperCase());
+            // Match by number or prefix
+            if (statusStr.equals("1") || statusStr.startsWith("R")) {
+                status = ServiceStatus.RUNNING;
+            } else if (statusStr.equals("2") || statusStr.startsWith("S")) {
+                status = ServiceStatus.STOPPED;
+            } else if (statusStr.equals("3") || statusStr.startsWith("F")) {
+                status = ServiceStatus.FAILED;
+            } else {
+                // Try exact match as fallback
+                status = ServiceStatus.valueOf(statusStr);
+            }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid status. Must be RUNNING, STOPPED, or FAILED.");
+            System.out.println("Invalid status. Must be 1, 2, 3, RUNNING, STOPPED, or FAILED.");
             return;
         }
-        
+
+        // Create the service based on type
         Service newService = null;
-        
         switch (type) {
             case 1:
-                int port = getIntInput("Enter port: ");
-                try {
-                    newService = new WebService(name, version, environment, status, port);
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid port: " + e.getMessage());
-                    return;
-                }
+                newService = new WebService(name, version, environment, status, port);
                 break;
             case 2:
-                System.out.print("Enter database type: ");
-                String dbType = scanner.nextLine();
-                if (dbType.isEmpty()) {
-                    System.out.println("Database type cannot be empty.");
-                    return;
-                }
                 newService = new DatabaseService(name, version, environment, status, dbType);
                 break;
             case 3:
-                System.out.print("Enter job type: ");
-                String jobType = scanner.nextLine();
-                if (jobType.isEmpty()) {
-                    System.out.println("Job type cannot be empty.");
-                    return;
-                }
                 newService = new WorkerService(name, version, environment, status, jobType);
                 break;
-            default:
-                System.out.println("Invalid service type.");
-                return;
         }
-        
+
+        // Add service to manager
         if (manager.addService(newService)) {
             System.out.println(name + " added successfully.");
         } else {
@@ -171,6 +269,10 @@ public class ConsoleUI {
     // Remove a service by name
     private void removeService() {
         System.out.println("\n--- Remove Service ---");
+        System.out.println("Existing services:");
+        for (Service service : manager.getServices()) {
+            System.out.println("- " + service.getName());
+        }
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (manager.removeService(name)) {
@@ -211,6 +313,10 @@ public class ConsoleUI {
     // Start a service by name
     private void startService() {
         System.out.println("\n--- Start Service ---");
+        System.out.println("Existing services:");
+        for (Service service : manager.getServices()) {
+            System.out.println("- " + service.getName() + " (" + service.getStatus() + ")");
+        }
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
@@ -227,6 +333,10 @@ public class ConsoleUI {
     // Stop a service by name
     private void stopService() {
         System.out.println("\n--- Stop Service ---");
+        System.out.println("Existing services:");
+        for (Service service : manager.getServices()) {
+            System.out.println("- " + service.getName() + " (" + service.getStatus() + ")");
+        }
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
@@ -243,12 +353,24 @@ public class ConsoleUI {
     // Deploy a new version of a service
     private void deployService() {
         System.out.println("\n--- Deploy Service ---");
+        System.out.println("Existing services:");
+        for (Service service : manager.getServices()) {
+            System.out.println("- " + service.getName());
+        }
         System.out.print(SERVICE_NAME_PROMPT);
         String name = scanner.nextLine();
         if (name.isEmpty()) {
             System.out.println(SERVICE_NAME_EMPTY_ERROR);
             return;
         }
+        Service service = manager.getService(name);
+        if (service == null) {
+            System.out.println("Service not found: " + name);
+            return;
+        }
+        String oldVersion = service.getVersion();
+        System.out.println("Current version: " + oldVersion);
+        System.out.println("Version format: numbers separated by dots (e.g., 1, 1.0, 2.5.1)");
         System.out.print("Enter new version: ");
         String version = scanner.nextLine();
         if (version.isEmpty()) {
@@ -260,7 +382,7 @@ public class ConsoleUI {
             return;
         }
         if (manager.deployService(name, version)) {
-            System.out.println(name + " deployed successfully.");
+            System.out.println(name + " deployed successfully from " + oldVersion + " to " + version + ".");
         } else {
             System.out.println("Service " + name + " is not deployable or not found.");
         }
@@ -269,13 +391,27 @@ public class ConsoleUI {
     // Display services filtered by environment
     private void displayServicesByEnvironment() {
         System.out.println("\n--- Services by Environment ---");
-        System.out.println("Environments: DEVELOPMENT, STAGING, PRODUCTION");
+        System.out.println("1. DEVELOPMENT (dev)");
+        System.out.println("2. STAGING (staging)");
+        System.out.println("3. PRODUCTION (prod)");
         System.out.print("Enter environment: ");
-        String env = scanner.nextLine();
+        String env = scanner.nextLine().toUpperCase();
         try {
-            List<Service> services = manager.getServicesByEnvironment(env.toUpperCase());
+            // Match by number or prefix
+            String envName;
+            if (env.equals("1") || env.startsWith("D")) {
+                envName = "DEVELOPMENT";
+            } else if (env.equals("2") || env.startsWith("S")) {
+                envName = "STAGING";
+            } else if (env.equals("3") || env.startsWith("P")) {
+                envName = "PRODUCTION";
+            } else {
+                envName = env;
+            }
+            // Get and display services in the selected environment
+            List<Service> services = manager.getServicesByEnvironment(envName);
             if (services.isEmpty()) {
-                System.out.println("No services found in environment: " + env);
+                System.out.println("No services found in environment: " + envName);
             } else {
                 for (Service service : services) {
                     System.out.println(service.getName());

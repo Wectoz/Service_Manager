@@ -51,6 +51,15 @@ public class ServiceManager {
         }
         throw new ServiceNotFoundException("Service not found: " + name);
     }
+
+    // Get a service by name - returns null if not found
+    public Service getService(String name) {
+        try {
+            return findServiceByName(name);
+        } catch (ServiceNotFoundException e) {
+            return null;
+        }
+    }
     
     // Return an unmodifiable list of all services
     public List<Service> getServices() {

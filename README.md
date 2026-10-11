@@ -8,6 +8,7 @@ A console application for managing IT services in DevOps environments. Register,
 - **Service Operations**: Start, stop, and deploy new versions
 - **Filtering**: View services by environment (Development, Staging, Production)
 - **Statistics**: Display service status counts and information
+- **User-Friendly Input**: Numbered options with abbreviations, prefix matching, and helpful prompts
 
 ## Architecture
 
@@ -42,8 +43,18 @@ A console application for managing IT services in DevOps environments. Register,
 9. Display service statistics
 0. Exit the program
 
+## User Input Features
+
+- **Numbered Options**: All selections use numbered menus (1, 2, 3, etc.)
+- **Abbreviations**: Shortcuts available (e.g., "dev" for DEVELOPMENT, "run" for RUNNING)
+- **Prefix Matching**: Type partial inputs (e.g., "d" for DEVELOPMENT, "p" for PostgreSQL)
+- **Service Lists**: Existing services displayed before remove/start/stop/deploy operations
+- **Format Hints**: Version and port format shown before input prompts
+- **Section Headers**: Clear visual separation for each input section
+
 ## Error Handling
 
 - Invalid port numbers throw `IllegalArgumentException`
 - Missing services throw `ServiceNotFoundException`
 - Invalid menu input is handled gracefully with retry
+- Invalid service types, database types, job types, environments, and statuses are validated with helpful error messages
